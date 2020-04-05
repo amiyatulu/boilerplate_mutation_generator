@@ -1,0 +1,93 @@
+import React, { Component } from "react"
+import * as Yup from "yup"
+import gql from "graphql-tag"
+import { useMutation } from "@apollo/react-hooks"
+import { Formik, Form, Field } from "formik"
+import { withRouter } from "react-router"
+
+const [@[gqlconst]@] = gql`
+    mutation [@[muationvariablename]@] (
+        {% for key,value in variables.items() %} $[@[ key ]@]: {% if value == "TextArea" %}String {% else %}[@[value]@]{% endif %}
+        {% endfor %}) {
+        [@[ mutationname ]@] (
+            input: {
+                {% for key,value in variables.items() %} [@[ key ]@]: $[@[key]@]
+                {% endfor %} }
+        ) {
+            [@[ mutationout ]@]
+        }
+    }
+`
+
+function SubmittingWheel(props) {
+  const isSubmitting = props.isSubmitting
+  const isValid = props.isValid
+  const error = props.error
+  // console.log(isSubmitting, isValid);
+  if (isSubmitting && isValid) {
+    return <div>Submitting...</div>
+  } else {
+    return <React.Fragment></React.Fragment>
+  }
+}
+
+function [@[muationvariablename]@]Form(props) {
+    const [[@[ mutationname ]@]Call, { loading: mutationLoading, error: mutationError }] = useMutation([@[gqlconst]@])
+    // const [count, setCount] = useState(0);
+
+    return (
+        <Formik 
+          initialValues= {{
+            {% for key,value in variables.items() %} [@[ key ]@]: "", 
+            {% endfor %} }}
+          validationSchema = {Yup.object().shape({
+            {% for key,value in variables.items() %} $[@[ key ]@]: Yup.{% if value == "String" or value == "TextArea" %}string(){% elif value  == "Int" %}number(){% endif %}.required("Message"),
+            {% endfor %}
+          })}
+          onSubmit={(values, actions) => {
+              //values.countvariable = count
+              const promise = [@[ mutationname ]@]Call({ variables: values })
+              promise.then(function(data){
+                  actions.setSubmitting(false)
+                  // console.log(data)
+                  props.history.push(`/thankyou${data.data.mutationoutputname}`)
+              })
+          }}        
+        >
+         {({ handleSubmit, handleBlur, handleChange, errors, touched, isValid, isSubmitting, values, setFieldValue }) => (
+             <Form onSubmit={handleSubmit}>
+              {% for key,value in variables.items() %}
+                <div className="form-group">
+                <label htmlFor="[@[key]@]">[@[key]@]</label>
+                {touched.[@[key]@] && errors.[@[key]@] && <p className="alert alert-danger">{errors.[@[key]@]}</p>}
+                {% if value == "String" or value == "Int" %}
+                <Field name="[@[key]@]" className="form-control" />
+                {% elif  value == "TextArea" %}
+                <Field name="[@[key]@]" component="textarea" rows="5" className="form-control" />
+                {% endif %}
+                </div>
+              {% endfor %}
+              <div className="text-center">
+                <button type="submit" className="btn btn-primary">
+                  Submit Form
+                </button>
+                <SubmittingWheel />
+              </div>
+             </Form>
+         )}
+        </Formik>
+    )
+}
+
+class [@[classname]@] extends Component {
+  render() {
+    const { history } = this.props
+    return (
+      <React.Fragment>
+        <[@[muationvariablename]@]Form history={history} />
+      </React.Fragment>
+    )
+  }
+}
+
+export default withRouter([@[classname]@])
