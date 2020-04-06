@@ -1,8 +1,8 @@
-import React, { Component } from "react"
+import React, { Component, useEffect} from "react"
 import * as Yup from "yup"
 import gql from "graphql-tag"
 import { useMutation } from "@apollo/react-hooks"
-import { Formik, Form, Field } from "formik"
+import { Formik, Form, Field, useFormikContext} from "formik"
 import { withRouter } from "react-router"
 
 const CREATE_FEEDBACK = gql`
@@ -34,6 +34,27 @@ const CREATE_FEEDBACK = gql`
         }
     }
 `
+
+const FocusError = () => {
+  const { errors, isSubmitting, isValidating } = useFormikContext()
+
+  useEffect(() => {
+    if (isSubmitting && !isValidating) {
+      let keys = Object.keys(errors)
+      if (keys.length > 0) {
+        const selector = `[for=${keys[0]}]`
+        console.log(selector)
+        const errorElement = document.querySelector(selector)
+        console.log(errorElement)
+        if (errorElement) {
+          errorElement.scrollIntoView()
+        }
+      }
+    }
+  }, [errors, isSubmitting, isValidating])
+
+  return null
+}
 
 function SubmittingWheel(props) {
   const isSubmitting = props.isSubmitting
@@ -127,6 +148,7 @@ function CreateFeedbackForm(props) {
                 </button>
                 <SubmittingWheel />
               </div>
+              <FocusError />
              </Form>
          )}
         </Formik>
