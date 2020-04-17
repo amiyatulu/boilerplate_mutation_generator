@@ -25,7 +25,7 @@ if __name__ == "__main__":
     muationvariablename = "CreateFeedback" #Upper camel case
     mutationname = "createFeedback" #Lower camel case
     # Variables attribute are `String`, `TextArea`, `Int`
-    variables = {"name" : "String", "affiliation": "String", "idea": "TextArea", "ideaRating": "Int", "criticism": "TextArea"}
+    variables = {"name" : "String", "affiliation": "String", "idea": "TextArea", "ideaRating": "Int", "criticism": "TextArea", "challenges": "TextArea", "fundingWilliness": "Int"}
     mutationout = """feedback {
         name
         affiliation
