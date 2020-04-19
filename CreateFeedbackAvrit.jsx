@@ -65,7 +65,7 @@ function SubmittingWheel(props) {
   const error = props.error
   // console.log(isSubmitting, isValid);
   if (isSubmitting && isValid) {
-    return <div>Submitting...</div>
+    return <div><br/> Submitting... ⌛</div>
   } else {
     return <React.Fragment></React.Fragment>
   }
@@ -169,7 +169,7 @@ function CreateFeedbackForm(props) {
                 <button type="submit" className="btn btn-primary">
                   Submit Form
                 </button>
-                <SubmittingWheel />
+                <SubmittingWheel isValid={isValid} isSubmitting={isSubmitting} />
               </div>
               <FocusError />
              </Form>
