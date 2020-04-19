@@ -42,9 +42,10 @@ const FocusError = () => {
 function SubmittingWheel(props) {
   const isSubmitting = props.isSubmitting
   const isValid = props.isValid
+  const mutationLoading = props.mutationLoading
   const error = props.error
   // console.log(isSubmitting, isValid);
-  if (isSubmitting && isValid) {
+  if (isSubmitting && isValid && mutationLoading ) {
     return <div><br/> Submitting... ⌛</div>
   } else {
     return <React.Fragment></React.Fragment>
@@ -64,18 +65,23 @@ function [@[muationvariablename]@]Form(props) {
             {% for key,value in variables.items() %} [@[ key ]@]: Yup.{% if value == "String" or value == "TextArea" %}string(){% elif value  == "Int" %}number(){% endif %}.required("Message"),
             {% endfor %}
           })}
-          onSubmit={(values, actions) => {
+          onSubmit={async (values, actions) => {
               //values.countvariable = count
-              const promise = [@[ mutationname ]@]Call({ variables: values })
-              promise.then(function(data){
-                  actions.setSubmitting(false)
-                  // console.log(data)
-                  props.history.push(`/thankyou${data.data.mutationoutputname}`)
-              })
+              const data = await [@[ mutationname ]@]Call({ variables: values })
+              actions.setSubmitting(false)
+              // console.log(data)
+              props.history.push(`/thankyou${data.mutationoutputname}`)
           }}        
         >
          {({ handleSubmit, handleBlur, handleChange, errors, touched, isValid, isSubmitting, values, setFieldValue, validateForm }) => (
              <Form onSubmit={handleSubmit}>
+                 {mutationError && (
+                    <p className="alert alert-danger">
+                      {mutationError.graphQLErrors.map(({ message }, i) => (
+                        <span key={i}>{message}</span>
+                      ))}
+                    </p>
+                  )}
               {% for key,value in variables.items() %}
                 <div className="form-group">
                 <label htmlFor="[@[key]@]">[@[key]@]</label>
@@ -91,8 +97,9 @@ function [@[muationvariablename]@]Form(props) {
                 <button type="submit" className="btn btn-primary">
                   Submit Form
                 </button>
-                <SubmittingWheel isValid={isValid} isSubmitting={isSubmitting} />
+                
               </div>
+              <SubmittingWheel isValid={isValid} isSubmitting={isSubmitting}   mutationLoading={mutationLoading}/>
               <FocusError />
              </Form>
          )}

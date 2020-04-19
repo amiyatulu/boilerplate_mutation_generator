@@ -62,9 +62,10 @@ const FocusError = () => {
 function SubmittingWheel(props) {
   const isSubmitting = props.isSubmitting
   const isValid = props.isValid
+  const mutationLoading = props.mutationLoading
   const error = props.error
   // console.log(isSubmitting, isValid);
-  if (isSubmitting && isValid) {
+  if (isSubmitting && isValid && mutationLoading ) {
     return <div><br/> Submitting... ⌛</div>
   } else {
     return <React.Fragment></React.Fragment>
@@ -96,18 +97,23 @@ function CreateFeedbackForm(props) {
              fundingWilliness: Yup.number().required("Message"),
             
           })}
-          onSubmit={(values, actions) => {
+          onSubmit={async (values, actions) => {
               //values.countvariable = count
-              const promise = createFeedbackCall({ variables: values })
-              promise.then(function(data){
-                  actions.setSubmitting(false)
-                  // console.log(data)
-                  props.history.push(`/thankyou${data.data.mutationoutputname}`)
-              })
+              const data = await createFeedbackCall({ variables: values })
+              actions.setSubmitting(false)
+              // console.log(data)
+              props.history.push(`/thankyou${data.mutationoutputname}`)
           }}        
         >
          {({ handleSubmit, handleBlur, handleChange, errors, touched, isValid, isSubmitting, values, setFieldValue, validateForm }) => (
              <Form onSubmit={handleSubmit}>
+                 {mutationError && (
+                    <p className="alert alert-danger">
+                      {mutationError.graphQLErrors.map(({ message }, i) => (
+                        <span key={i}>{message}</span>
+                      ))}
+                    </p>
+                  )}
               
                 <div className="form-group">
                 <label htmlFor="name">name</label>
@@ -169,8 +175,9 @@ function CreateFeedbackForm(props) {
                 <button type="submit" className="btn btn-primary">
                   Submit Form
                 </button>
-                <SubmittingWheel isValid={isValid} isSubmitting={isSubmitting} />
+                
               </div>
+              <SubmittingWheel isValid={isValid} isSubmitting={isSubmitting}   mutationLoading={mutationLoading}/>
               <FocusError />
              </Form>
          )}
