@@ -1,8 +1,9 @@
-import React, { Component, useEffect} from "react"
+import React, { Component} from "react"
 import * as Yup from "yup"
-import { gql, useMutation } from '@apollo/client'
-import { Formik, Form, Field, useFormikContext} from "formik"
+import { gql, useMutation } from "@apollo/client"
+import { Formik, Form, Field } from "formik"
 import { withRouter } from "react-router"
+import {FocusError, SubmittingWheel} from "../commons/MutationCommon"
 
 const [@[gqlconst]@] = gql`
     mutation [@[muationvariablename]@] (
@@ -18,39 +19,6 @@ const [@[gqlconst]@] = gql`
     }
 `
 
-const FocusError = () => {
-  const { errors, isSubmitting, isValidating } = useFormikContext()
-
-  useEffect(() => {
-    if (isSubmitting && !isValidating) {
-      let keys = Object.keys(errors)
-      if (keys.length > 0) {
-        const selector = `[for=${keys[0]}]`
-        // console.log(selector)
-        const errorElement = document.querySelector(selector)
-        // console.log(errorElement)
-        if (errorElement) {
-          errorElement.scrollIntoView()
-        }
-      }
-    }
-  }, [errors, isSubmitting, isValidating])
-
-  return null
-}
-
-function SubmittingWheel(props) {
-  const isSubmitting = props.isSubmitting
-  const isValid = props.isValid
-  const mutationLoading = props.mutationLoading
-  const error = props.error
-  // console.log(isSubmitting, isValid);
-  if (isSubmitting && isValid && mutationLoading ) {
-    return <div><br/> Submitting... ⌛</div>
-  } else {
-    return <React.Fragment></React.Fragment>
-  }
-}
 
 function [@[muationvariablename]@]Form(props) {
     const [[@[ mutationname ]@]Call, { loading: mutationLoading, error: mutationError }] = useMutation([@[gqlconst]@])
