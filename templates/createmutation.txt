@@ -2,7 +2,7 @@ import React, { Component} from "react"
 import * as Yup from "yup"
 import { gql, useMutation } from "@apollo/client"
 import { Formik, Form, Field } from "formik"
-import { withRouter } from "react-router"
+import { useHistory } from "react-router-dom"
 import {FocusError, SubmittingWheel} from "../commons/MutationCommon"
 
 const [@[gqlconst]@] = gql`
@@ -20,9 +20,10 @@ const [@[gqlconst]@] = gql`
 `
 
 
-function [@[muationvariablename]@]Form(props) {
+function [@[classname]@]() {
     const [[@[ mutationname ]@]Call, { loading: mutationLoading, error: mutationError }] = useMutation([@[gqlconst]@])
     // const [count, setCount] = useState(0);
+    let history = useHistory();
 
     return (
         <Formik 
@@ -38,7 +39,7 @@ function [@[muationvariablename]@]Form(props) {
               const data = await [@[ mutationname ]@]Call({ variables: values })
               actions.setSubmitting(false)
               // console.log(data)
-              props.history.push(`/thankyou${data.mutationoutputname}`)
+              history.push(`/thankyou${data.mutationoutputname}`)
           }}        
         >
          {({ handleSubmit, handleBlur, handleChange, errors, touched, isValid, isSubmitting, values, setFieldValue, validateForm }) => (
@@ -67,7 +68,7 @@ function [@[muationvariablename]@]Form(props) {
                 </button>
                 
               </div>
-              <SubmittingWheel isValid={isValid} isSubmitting={isSubmitting}   mutationLoading={mutationLoading}/>
+              <SubmittingWheel isValid={isValid} isSubmitting={isSubmitting} mutationLoading={mutationLoading}/>
               <FocusError />
              </Form>
          )}
@@ -75,15 +76,5 @@ function [@[muationvariablename]@]Form(props) {
     )
 }
 
-class [@[classname]@] extends Component {
-  render() {
-    const { history } = this.props
-    return (
-      <React.Fragment>
-        <[@[muationvariablename]@]Form history={history} />
-      </React.Fragment>
-    )
-  }
-}
 
-export default withRouter([@[classname]@])
+export default [@[classname]@]
