@@ -4,7 +4,7 @@
 ### Set the variables name ###
     classname = "CreateFeedbackAvrit" #Upper camel case
     f = open(directory + "/" + classname + ".jsx", "w")
-    gqlconst = "CREATE_FEEDBACK"
+    gqlconst = "CREATE_FEEDBACK" #Upper case with underscores
     muationvariablename = "CreateFeedback" #Upper camel case
     mutationname = "createFeedback" #Lower camel case
     # Variables attribute are `String`, `TextArea`, `Int`
@@ -18,5 +18,4 @@
         challenges
         fundingWilliness
       }"""
-
 ### End of setting variables ###
