@@ -1,8 +1,9 @@
-import React, { Component, useEffect} from "react"
+import React, { Component} from "react"
 import * as Yup from "yup"
-import { gql, useMutation } from '@apollo/client'
-import { Formik, Form, Field, useFormikContext} from "formik"
-import { withRouter } from "react-router"
+import { gql, useMutation } from "@apollo/client"
+import { Formik, Form, Field } from "formik"
+import { useHistory } from "react-router-dom"
+import {FocusError, SubmittingWheel} from "../commons/MutationCommon"
 
 const CREATE_FEEDBACK = gql`
     mutation CreateFeedback (
@@ -38,42 +39,11 @@ const CREATE_FEEDBACK = gql`
     }
 `
 
-const FocusError = () => {
-  const { errors, isSubmitting, isValidating } = useFormikContext()
 
-  useEffect(() => {
-    if (isSubmitting && !isValidating) {
-      let keys = Object.keys(errors)
-      if (keys.length > 0) {
-        const selector = `[for=${keys[0]}]`
-        // console.log(selector)
-        const errorElement = document.querySelector(selector)
-        // console.log(errorElement)
-        if (errorElement) {
-          errorElement.scrollIntoView()
-        }
-      }
-    }
-  }, [errors, isSubmitting, isValidating])
-
-  return null
-}
-
-function SubmittingWheel(props) {
-  const isSubmitting = props.isSubmitting
-  const isValid = props.isValid
-  const error = props.error
-  // console.log(isSubmitting, isValid);
-  if (isSubmitting && isValid) {
-    return <div>Submitting...</div>
-  } else {
-    return <React.Fragment></React.Fragment>
-  }
-}
-
-function CreateFeedbackForm(props) {
+function CreateFeedbackAvrit() {
     const [createFeedbackCall, { loading: mutationLoading, error: mutationError }] = useMutation(CREATE_FEEDBACK)
     // const [count, setCount] = useState(0);
+    let history = useHistory();
 
     return (
         <Formik 
@@ -96,18 +66,23 @@ function CreateFeedbackForm(props) {
              fundingWilliness: Yup.number().required("Message"),
             
           })}
-          onSubmit={(values, actions) => {
+          onSubmit={async (values, actions) => {
               //values.countvariable = count
-              const promise = createFeedbackCall({ variables: values })
-              promise.then(function(data){
-                  actions.setSubmitting(false)
-                  // console.log(data)
-                  props.history.push(`/thankyou${data.data.mutationoutputname}`)
-              })
+              const data = await createFeedbackCall({ variables: values })
+              actions.setSubmitting(false)
+              // console.log(data)
+              history.push(`/thankyou${data.mutationoutputname}`)
           }}        
         >
          {({ handleSubmit, handleBlur, handleChange, errors, touched, isValid, isSubmitting, values, setFieldValue, validateForm }) => (
              <Form onSubmit={handleSubmit}>
+                 {mutationError && (
+                    <p className="alert alert-danger">
+                      {mutationError.graphQLErrors.map(({ message }, i) => (
+                        <span key={i}>{message}</span>
+                      ))}
+                    </p>
+                  )}
               
                 <div className="form-group">
                 <label htmlFor="name">name</label>
@@ -169,8 +144,9 @@ function CreateFeedbackForm(props) {
                 <button type="submit" className="btn btn-primary">
                   Submit Form
                 </button>
-                <SubmittingWheel />
+                
               </div>
+              <SubmittingWheel isValid={isValid} isSubmitting={isSubmitting} mutationLoading={mutationLoading}/>
               <FocusError />
              </Form>
          )}
@@ -178,15 +154,5 @@ function CreateFeedbackForm(props) {
     )
 }
 
-class CreateFeedbackAvrit extends Component {
-  render() {
-    const { history } = this.props
-    return (
-      <React.Fragment>
-        <CreateFeedbackForm history={history} />
-      </React.Fragment>
-    )
-  }
-}
 
-export default withRouter(CreateFeedbackAvrit)
+export default CreateFeedbackAvrit
