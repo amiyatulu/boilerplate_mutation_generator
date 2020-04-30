@@ -12,8 +12,6 @@ const CREATE_FEEDBACK = gql`
          $idea: String 
          $ideaRating: Int
          $criticism: String 
-         $challenges: String 
-         $fundingWilliness: Int
         ) {
         createFeedback (
             input: {
@@ -22,8 +20,6 @@ const CREATE_FEEDBACK = gql`
                  idea: $idea
                  ideaRating: $ideaRating
                  criticism: $criticism
-                 challenges: $challenges
-                 fundingWilliness: $fundingWilliness
                  }
         ) {
             feedback {
@@ -40,7 +36,7 @@ const CREATE_FEEDBACK = gql`
 `
 
 
-function CreateFeedbackAvrit() {
+function CreateFeedbackForm(props) {
     const [createFeedbackCall, { loading: mutationLoading, error: mutationError }] = useMutation(CREATE_FEEDBACK)
     // const [count, setCount] = useState(0);
     let history = useHistory();
@@ -53,17 +49,13 @@ function CreateFeedbackAvrit() {
              idea: "", 
              ideaRating: "", 
              criticism: "", 
-             challenges: "", 
-             fundingWilliness: "", 
              }}
           validationSchema = {Yup.object().shape({
-             name: Yup.string().required("Message"),
-             affiliation: Yup.string().required("Message"),
-             idea: Yup.string().required("Message"),
-             ideaRating: Yup.number().required("Message"),
-             criticism: Yup.string().required("Message"),
-             challenges: Yup.string().required("Message"),
-             fundingWilliness: Yup.number().required("Message"),
+             name: Yup.string().required("name is required"),
+             affiliation: Yup.string().required("affiliation is required"),
+             idea: Yup.string().required("idea is required"),
+             ideaRating: Yup.number().required("ideaRating is required"),
+             criticism: Yup.string().required("criticism is required"),
             
           })}
           onSubmit={async (values, actions) => {
@@ -124,22 +116,6 @@ function CreateFeedbackAvrit() {
                 
                 </div>
               
-                <div className="form-group">
-                <label htmlFor="challenges">challenges</label>
-                {touched.challenges && errors.challenges && <p className="alert alert-danger">{errors.challenges}</p>}
-                
-                <Field name="challenges" component="textarea" rows="5" className="form-control" />
-                
-                </div>
-              
-                <div className="form-group">
-                <label htmlFor="fundingWilliness">fundingWilliness</label>
-                {touched.fundingWilliness && errors.fundingWilliness && <p className="alert alert-danger">{errors.fundingWilliness}</p>}
-                
-                <Field name="fundingWilliness" className="form-control" />
-                
-                </div>
-              
               <div className="text-center">
                 <button type="submit" className="btn btn-primary">
                   Submit Form
@@ -154,5 +130,14 @@ function CreateFeedbackAvrit() {
     )
 }
 
+function CreateFeedbackAvrit() {
+  return (
+    <React.Fragment>
+    <CreateFeedbackForm />
+    </React.Fragment>
+  )
+}
+
 
 export default CreateFeedbackAvrit
+export {CreateFeedbackForm}

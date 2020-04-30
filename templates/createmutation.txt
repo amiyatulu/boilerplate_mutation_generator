@@ -20,7 +20,7 @@ const [@[gqlconst]@] = gql`
 `
 
 
-function [@[classname]@]() {
+function [@[muationvariablename]@]Form(props) {
     const [[@[ mutationname ]@]Call, { loading: mutationLoading, error: mutationError }] = useMutation([@[gqlconst]@])
     // const [count, setCount] = useState(0);
     let history = useHistory();
@@ -31,7 +31,7 @@ function [@[classname]@]() {
             {% for key,value in variables.items() %} [@[ key ]@]: "", 
             {% endfor %} }}
           validationSchema = {Yup.object().shape({
-            {% for key,value in variables.items() %} [@[ key ]@]: Yup.{% if value == "String" or value == "TextArea" %}string(){% elif value  == "Int" %}number(){% endif %}.required("Message"),
+            {% for key,value in variables.items() %} [@[ key ]@]: Yup.{% if value == "String" or value == "TextArea" %}string(){% elif value  == "Int" %}number(){% endif %}.required("[@[ key ]@] is required"),
             {% endfor %}
           })}
           onSubmit={async (values, actions) => {
@@ -76,5 +76,14 @@ function [@[classname]@]() {
     )
 }
 
+function [@[classname]@]() {
+  return (
+    <React.Fragment>
+    <[@[muationvariablename]@]Form />
+    </React.Fragment>
+  )
+}
+
 
 export default [@[classname]@]
+export {[@[muationvariablename]@]Form}
