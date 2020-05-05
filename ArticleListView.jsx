@@ -5,16 +5,27 @@ import { gql, useQuery } from '@apollo/client'
 
 
 
-const [@[gqlconst]@] = gql`
-[@[body]@]
+const ARTICLE_LIST_QUERY = gql`
+query {
+  biohelikonManuscript {
+    edges {
+      node {
+        id
+        title
+        abstract
+        authors     
+      }
+    }
+  }
+}
 `
 
 const preStyle = {
    whiteSpace: 'pre-line'
 }
 
-function [@[classname]@]View() {
-    const { loading, error, data } = useQuery([@[gqlconst]@]);
+function ArticleListViewView() {
+    const { loading, error, data } = useQuery(ARTICLE_LIST_QUERY);
     if (loading) return 'Loading...';
     if (error) return `Error! ${error.message}`;
             // return error.graphQLErrors.map(({ message }, i) =>
@@ -36,10 +47,10 @@ function [@[classname]@]View() {
             // )
     return (
         <React.Fragment>
-        {% for n in range(fieldcount) %}
+        
         <div className={`card`}>
             <div className="card-body">
-              <h4 className="card-title">Title[@[n]@]</h4>
+              <h4 className="card-title">Title0</h4>
               <hr />
               <p className="card-text" style={preStyle}>
                 {data.genericProfile.{data.__}}
@@ -47,7 +58,29 @@ function [@[classname]@]View() {
             </div>
         </div>
         <br />
-        {% endfor %}
+        
+        <div className={`card`}>
+            <div className="card-body">
+              <h4 className="card-title">Title1</h4>
+              <hr />
+              <p className="card-text" style={preStyle}>
+                {data.genericProfile.{data.__}}
+              </p>
+            </div>
+        </div>
+        <br />
+        
+        <div className={`card`}>
+            <div className="card-body">
+              <h4 className="card-title">Title2</h4>
+              <hr />
+              <p className="card-text" style={preStyle}>
+                {data.genericProfile.{data.__}}
+              </p>
+            </div>
+        </div>
+        <br />
+        
         </React.Fragment>        
     )
 
@@ -75,13 +108,13 @@ function [@[classname]@]View() {
   // )
 }
 
-function [@[classname]@]() {
+function ArticleListView() {
     return (
         <React.Fragment>
-            <[@[classname]@]View />
+            <ArticleListViewView />
         </React.Fragment>
     )
 }
 
-export default [@[classname]@]
-export {[@[classname]@]View}
+export default ArticleListView
+export {ArticleListViewView}

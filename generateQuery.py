@@ -19,14 +19,19 @@ def htmltext(templatename="", **kwargs):
 if __name__ == "__main__":
     templatename = "createquery.txt"
     ### Set the variables name ###
-    classname = "ProfileDetails" #Upper camel case
+    classname = "ArticleListView" #Upper camel case
     f = open(directory + "/" + classname + ".jsx", "w")
-    gqlconst = "GENERIC_PROFILE_QUERY" #Upper case with underscores
-    body = """query{
-  genericProfile{
-    affiliation
-    summary
-    experience    
+    gqlconst = "ARTICLE_LIST_QUERY" #Upper case with underscores
+    body = """query {
+  biohelikonManuscript {
+    edges {
+      node {
+        id
+        title
+        abstract
+        authors     
+      }
+    }
   }
 }"""
     fieldcount = 3
