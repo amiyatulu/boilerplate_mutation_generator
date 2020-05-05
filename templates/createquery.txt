@@ -42,7 +42,7 @@ function [@[classname]@]View() {
               <h4 className="card-title">Title[@[n]@]</h4>
               <hr />
               <p className="card-text" style={preStyle}>
-                {data.genericProfile.{data.__}}
+                {data.QUERYNAME.___}
               </p>
             </div>
         </div>
@@ -63,7 +63,7 @@ function [@[classname]@]View() {
   //                 <h4 className="card-title">{item.node.___}</h4>
   //                 <p className="card-text">{item.node.__}</p>
   //                 <hr />
-  //                 <p className="card-text" dangerouslySetInnerHTML={{ __html: item.node.___ }} />
+  //                 <p className="card-text" dangerouslySetInnerHTML={{ __html: item.node. }} />
   //               </div>
   //             </div>
   //             <br />
